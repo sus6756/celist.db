@@ -100,4 +100,30 @@ plain SQLite database that opens anywhere.
 | `macos/Scripts` | Icon generation and `.app` packaging |
 | `windows/src` | Electron main, preload, renderer, styles |
 | `windows/src/gen_icon.py` | Windows `.ico` generation from the shared master |
+| `tools/pycelist` | Read-only pandas CLI + importable API for styled Excel export |
 | `docs/assets` | Shared logo artwork |
+
+## 6. The optional pandas companion
+
+`tools/pycelist` is deliberately *outside* both apps:
+
+- Bundling pandas would add ~60 MB and a whole Python runtime to the macOS and
+  Windows packages, for a feature most users open once a month.
+- A CLI over the same `.db` files works standalone, in scripts, in CI, and in
+  notebooks — no app running required.
+- Both apps can shell out to it later (`celist export …`) without changing
+  their architecture; the command only needs `python3` on `PATH`, and if it is
+  missing the app simply does not offer the extra commands.
+
+It shares the product's data contract rather than its code: it reads the same
+SQLite files, treats an empty cell as `NULL`, and refuses to write to the
+database at all (SQLite `mode=ro`), so the "your file is yours" guarantee holds
+even for the analytics path.
+
+```
+  celist.db app ──writes──▶ shop.db ◀──read-only── celist (pandas CLI)
+                              │                        │
+                              │                        ▼
+                     any SQLite tool            styled .xlsx / (later:
+                                                profiles, pivots, charts)
+```

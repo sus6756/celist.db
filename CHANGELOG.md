@@ -30,6 +30,22 @@ First public release: **celist.db**, the database app for the rest of us.
 - CSV / JSON import, CSV export, relationships viewer, and database backup.
 - Portable `.exe` and NSIS installer targets via `electron-builder`.
 
+### Added — pandas companion (`tools/pycelist`)
+
+- New read-only Python CLI, `celist`, that reads databases with pandas and
+  writes styled Excel `.xlsx` workbooks.
+- `celist info` — tables and views with row counts (`--json` supported).
+- `celist export` — export a table, a read-only query, or a whole database
+  (`--all-tables`), with `--sheet`, `--limit`, and a summary Index sheet.
+- Workbook styling: brand-indigo bold headers, frozen header row, autofilter,
+  fitted column widths, and number/date formats from the column dtypes.
+- CSV-grade edge handling: `NULL` → blank, BLOBs → `0x…` hex, unicode
+  identifiers and names, illegal/duplicate sheet names sanitised.
+- Importable Python API (`connect`, `read_table`, `read_query`,
+  `write_workbook`) sharing the same code path as the CLI.
+- 21 unittest cases, including proof that mutating SQL is refused because every
+  connection is opened with SQLite `mode=ro`.
+
 ### Added — project
 
 - Shared product icon artwork, generated for both `AppIcon.icns` and

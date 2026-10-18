@@ -21,6 +21,17 @@ npm-debug.log*
 *.db-journal
 *.db-wal
 
+# Python (tools/pycelist)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+tools/pycelist/build/
+tools/pycelist/dist/
+.pytest_cache/
+.venv/
+venv/
+
 # Editor / tooling
 .vscode/
 .idea/

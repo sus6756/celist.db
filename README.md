@@ -13,6 +13,7 @@
     <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6.0-F05138?logo=swift&logoColor=white">
     <img alt="Electron 33" src="https://img.shields.io/badge/Electron-33-47848F?logo=electron&logoColor=white">
     <img alt="SQLite" src="https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white">
+    <img alt="Python 3.9+" src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white">
     <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-2ea44f.svg"></a>
     <a href="CONTRIBUTING.md"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
   </p>
@@ -86,7 +87,10 @@ created on one opens on the other.
 ### 🔄 Move data in and out
 - Import **CSV** and **JSON** (array-of-objects) as new tables.
 - Export the current table *or* the current query result to **CSV** or **JSON**
-  (native `.xlsx` export is on the [roadmap](ROADMAP.md) for v1).
+  straight from the app.
+- Export **styled Excel `.xlsx`** — single sheets, whole databases, and a
+  summary Index sheet — with the bundled
+  [pandas companion CLI](#-pandas-companion-tools-pycelist).
 - **Relationships viewer** — every foreign-key link in one list.
 - **One-click backup** of the whole database to a timestamped copy.
 
@@ -155,6 +159,37 @@ python3 src/gen_icon.py   # requires Pillow
 ```
 </details>
 
+## 🐍 pandas companion (`tools/pycelist`)
+
+The apps export CSV/JSON. For **styled Excel `.xlsx`** — and as the home for
+every pandas-shaped feature on the roadmap — the repo carries a small read-only
+Python CLI.
+
+```bash
+pip install -e tools/pycelist      # requires Python 3.9+
+
+celist info shop.db                                    # tables, views, row counts
+celist export shop.db --table orders                   # → shop-orders.xlsx
+celist export shop.db --query "SELECT * FROM orders" --sheet "Recent orders"
+celist export shop.db --all-tables --include-views -o shop.xlsx
+```
+
+What you get in the workbook:
+
+- bold white headers on the brand indigo `#261A54`, **frozen header row**,
+  **autofilter**, and column widths fitted to the data;
+- number formats from the dtypes (`#,##0`, `#,##0.00`, `yyyy-mm-dd hh:mm`);
+- multi-sheet workbooks with a leading **Index** sheet for whole-database
+  exports;
+- `NULL` → blank cell, BLOBs → `0x…` hex.
+
+**Read-only by design:** every command opens the database with SQLite's
+`mode=ro`, so a `celist` command cannot modify or corrupt your data — a
+`DROP TABLE` through this tool fails by construction (and is covered by tests).
+
+See [`tools/pycelist/README.md`](tools/pycelist/README.md) for the full CLI
+reference, the importable Python API, and the test suite.
+
 ## Keyboard shortcuts
 
 | Action | macOS | Windows |
@@ -181,6 +216,9 @@ celist.db/
 │   ├── src/                  main / preload / renderer + styles
 │   ├── build/                Generated .ico
 │   └── package.json
+├── tools/pycelist/           pandas companion CLI (styled Excel export)
+│   ├── celistdb/             db.py (read-only SQLite) + excel.py + cli.py
+│   └── tests/                21 unittest cases
 ├── docs/
 │   ├── ARCHITECTURE.md       How the layers fit together
 │   └── assets/               Shared logo artwork
@@ -214,7 +252,7 @@ PostgreSQL, or SQL Server later without a rewrite. Read the full rationale in
 | Phase | Theme | Highlights |
 |---|---|---|
 | **MVP** ✅ | Local SQLite for the rest of us | Visual designer, datasheet grid, SQL tab, import/export, relationships, backup |
-| **v1** | Daily-driver productivity | Visual query builder, native `.xlsx`, saved queries/views, ER diagram, undo/redo, schema migration |
+| **v1** | Daily-driver productivity | Visual query builder, **styled Excel export** ✅ *(shipped as the [pandas companion](tools/pycelist))*, saved queries/views, ER diagram, undo/redo, schema migration |
 | **v2** | Connected & serious | MySQL / PostgreSQL / SQL Server, connection profiles in the keychain, forms, reports, no-code automation |
 
 Full detail — including the "not in MVP, deliberately" list — lives in

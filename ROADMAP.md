@@ -64,14 +64,27 @@ ever seeing SQL — while a power user can still use the SQL tab.
   backup (`VACUUM INTO` on macOS, byte-for-byte export on Windows)
 - [x] Windows edition: Electron + sql.js, same ribbon-driven workflow
 
+### Companion tooling
+
+- [x] `tools/pycelist` — read-only pandas CLI (`celist`) for styled Excel
+  `.xlsx` export: single sheets, whole-database workbooks with an Index sheet,
+  dtype-aware number/date formats, frozen headers, autofilter
+- [ ] Profiling reports (dtypes, nulls, uniques, summary stats)
+- [ ] Smarter CSV/JSON import (dtype inference, delimiter/header detection)
+- [ ] Pivot / group-by / merge without SQL, written back as a table or view
+- [ ] Charts from query results
+- [ ] Parquet / Feather I/O
+
 Not in MVP (deliberately): remote connections, drag-to-link ER diagram, forms,
 reports, permissions. Those are staged below so each phase lands coherently.
 
 ## v1 — Daily-driver productivity
 
+- [x] Native Excel (`.xlsx`) export — ships today as the read-only
+  [`tools/pycelist`](tools/pycelist) companion CLI: styled, multi-sheet
+  workbooks with a summary Index sheet (see below)
 - Visual query builder (point-and-click joins/filters/grouping) with live SQL
-- Native Excel (`.xlsx`) export in addition to CSV/JSON, and richer import
-  mapping (choose delimiter, header row, column types)
+- Richer import mapping (choose delimiter, header row, column types)
 - Saved queries & saved views
 - Relationships ER diagram: drag-to-link foreign keys on top of the MVP viewer
 - Undo/redo throughout (command stack) + guided wizards with tooltips

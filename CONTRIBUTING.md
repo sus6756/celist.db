@@ -47,6 +47,18 @@ npm start          # launch
 npm run dist       # portable + installer .exe into dist/
 ```
 
+### pandas companion
+
+Requires Python 3.9+.
+
+```bash
+cd tools/pycelist
+python3 -m unittest discover -s tests -v   # 21 tests
+python3 -m celistdb info <some.db>         # run without installing
+```
+
+Or install the `celist` console script with `pip install -e tools/pycelist`.
+
 ## Code conventions
 
 - **Views never touch the database.** All persistence goes through
@@ -61,11 +73,17 @@ npm run dist       # portable + installer .exe into dist/
 - Hidden gotcha: the Windows edition keeps the database in memory via sql.js, so
   **every mutation must be persisted back to disk** (see `persist()` in
   `windows/src/renderer.js`).
+- In `tools/pycelist`, never open a database for writing — the tool's whole
+  safety story is SQLite `mode=ro`, and `tests/test_export.py` enforces it.
+  Keep user-facing failures as `CelistDBError` so the CLI prints one clean line
+  instead of a traceback.
 
 ## Pull request checklist
 
 - [ ] `cd macos && swift build` then `swift run CelistDBTests` passes (if you
       touched Swift code; `swift test` too if you have Xcode installed)
+- [ ] `cd tools/pycelist && python3 -m unittest discover -s tests` passes (if
+      you touched the pandas companion)
 - [ ] `cd windows && npm start` launches without console errors (if you touched
       the Electron app)
 - [ ] New user-facing strings are plain language, and any binding that can be

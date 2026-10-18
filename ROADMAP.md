@@ -4,11 +4,10 @@ One database app for everyone. Powerful under the hood, dead simple to use.
 
 ## Architecture decision
 
-**Native SwiftUI + GRDB (SQLite), MVVM, protocol-driven** on macOS, with an
-**Electron + sql.js** edition for Windows that mirrors the same product model.
+**Native SwiftUI + GRDB (SQLite), MVVM, protocol-driven.**
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full rationale.
 
-Why not a single cross-platform runtime (Electron/Tauri) for both?
+Why native and not Electron/Tauri?
 
 - **SQLite/FTS is built into macOS** — the local storage engine costs us zero
   dependency weight and works offline from day one.
@@ -61,8 +60,7 @@ ever seeing SQL — while a power user can still use the SQL tab.
 - [x] External Data tab: CSV import, JSON import, and CSV / JSON export, scoped
   to the current table or query result
 - [x] Database Tools tab: Relationships viewer (foreign-key list) + database
-  backup (`VACUUM INTO` on macOS, byte-for-byte export on Windows)
-- [x] Windows edition: Electron + sql.js, same ribbon-driven workflow
+  backup (`VACUUM INTO`)
 
 ### Companion tooling
 
@@ -106,19 +104,9 @@ reports, permissions. Those are staged below so each phase lands coherently.
 
 ## How to build & run
 
-**macOS**
-
 ```bash
 cd macos
 swift run
 ```
 
 Or open `macos/` in Xcode (Swift Package) and Run. Requires macOS 14+.
-
-**Windows**
-
-```bash
-cd windows
-npm install
-npm start
-```

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First public release: **celist.db**, the database app for the rest of us.
 
-### Added — macOS edition (SwiftUI + GRDB)
+### Added — macOS app (SwiftUI + GRDB)
 
 - Visual table designer with column types, `PRIMARY KEY`, `NOT NULL`,
   `UNIQUE`, `AUTOINCREMENT`, `DEFAULT`, and foreign-key targets.
@@ -21,14 +21,6 @@ First public release: **celist.db**, the database app for the rest of us.
 - Sample shop database (customers, orders, order items) created in one click.
 - CSV and JSON import; CSV and JSON export for the current table or query.
 - Relationships viewer and one-click database backup (`VACUUM INTO`).
-
-### Added — Windows edition (Electron + sql.js)
-
-- Ribbon-driven UI mirroring the macOS edition: Home, Create, External Data,
-  Database Tools, File.
-- Visual table designer, datasheet grid, and SQL query editor.
-- CSV / JSON import, CSV export, relationships viewer, and database backup.
-- Portable `.exe` and NSIS installer targets via `electron-builder`.
 
 ### Added — pandas companion (`tools/pycelist`)
 
@@ -48,14 +40,13 @@ First public release: **celist.db**, the database app for the rest of us.
 
 ### Added — project
 
-- Shared product icon artwork, generated for both `AppIcon.icns` and
-  `icon.ico` from a single Python source.
+- Product icon artwork, generated as `AppIcon.icns` from a single Python source.
 - Architecture, roadmap, contributing, and changelog documentation.
-- CI workflow that builds the Swift package and validates the Electron app.
+- CI workflow that builds the Swift package and runs both test suites.
 
 ### Notes
 
-- Neither build is code-signed yet, so first launch requires the documented
-  Gatekeeper / SmartScreen bypass (see the README).
+- The build is not code-signed yet, so first launch requires the documented
+  Gatekeeper bypass (see the README).
 
 [1.0.0]: https://github.com/sus6756/celist.db/releases/tag/v1.0.0

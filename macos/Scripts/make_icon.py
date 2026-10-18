@@ -6,8 +6,7 @@ a bold rounded-surface emblem with an iridescent gradient, an orbiting ring
 and a scalar data point — on a deep indigo backdrop.
 
 Outputs:
-  /tmp/iconbuild/icon.png   - 1024x1024 master (consumed by Scripts/make_icns.sh
-                              and windows/src/gen_icon.py)
+  /tmp/iconbuild/icon.png   - 1024x1024 master (consumed by Scripts/make_icns.sh)
 """
 import math
 import os

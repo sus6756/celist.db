@@ -8,10 +8,8 @@
   No SQL required for 90% of the work. A full SQL blade for the other 10%.</p>
 
   <p>
-    <a href="#-macos-edition"><img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-1c1c1e?logo=apple&logoColor=white"></a>
-    <a href="#-windows-edition"><img alt="Windows 10/11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6?logo=windows&logoColor=white"></a>
+    <a href="#download--install"><img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-1c1c1e?logo=apple&logoColor=white"></a>
     <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6.0-F05138?logo=swift&logoColor=white">
-    <img alt="Electron 33" src="https://img.shields.io/badge/Electron-33-47848F?logo=electron&logoColor=white">
     <img alt="SQLite" src="https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white">
     <img alt="Python 3.9+" src="https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white">
     <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-2ea44f.svg"></a>
@@ -45,18 +43,15 @@ understands.
 > **Design principle:** the UI speaks *tables, columns, and rows*. SQL is
 > generated for you, shown to you, and always overridable.
 
-## Editions at a glance
+## At a glance
 
-| | 🍎 **macOS edition** | 🪟 **Windows edition** |
-|---|---|---|
-| Runtime | Native **SwiftUI** app | **Electron** desktop app |
-| Engine | **GRDB** over system SQLite | **sql.js** (SQLite → WebAssembly) |
-| Storage | Direct file access | Direct file access |
-| Min. OS | macOS 14 (Sonoma) | Windows 10 / 11 (64-bit) |
-| Source | [`macos/`](macos) | [`windows/`](windows) |
-
-Both editions share the same product model and file format, so a database
-created on one opens on the other.
+| | |
+|---|---|
+| **Platform** | macOS 14 (Sonoma) or later — Apple Silicon or Intel |
+| **Runtime** | Native **SwiftUI** app |
+| **Engine** | **GRDB** over the SQLite that already ships with macOS |
+| **Storage** | A single portable `.db` file you own |
+| **Source** | [`macos/`](macos) |
 
 ## Features
 
@@ -103,8 +98,6 @@ created on one opens on the other.
 
 ## Download & install
 
-### 🍎 macOS edition
-
 Download `celist.db.zip`, unzip it, and drag **celist.db.app** into
 `/Applications`.
 
@@ -112,19 +105,9 @@ Because the build is unsigned, macOS Gatekeeper will warn on first launch:
 **right-click (or Control-click) the app → Open → Open**. You only do this once.
 Full notes: [`macos/Scripts/README.txt`](macos/Scripts/README.txt).
 
-### 🪟 Windows edition
-
-Download `celist-db-windows-portable-*.exe` and run it — no installation
-required. An `-setup-*.exe` installer is also published with a Start Menu entry.
-
-Because the build is unsigned, Windows SmartScreen may show *"Windows protected
-your PC"*: click **More info → Run anyway**. You only do this once.
-Full notes: [`windows/README.txt`](windows/README.txt).
-
 ## Build from source
 
-<details open>
-<summary><strong>macOS — Swift 6.0 · macOS 14+ · Xcode command line tools</strong></summary>
+Requires **macOS 14+**, **Swift 6.0+**, and the Xcode command line tools.
 
 ```bash
 cd macos
@@ -140,28 +123,17 @@ standalone logic harness (works with the command line tools alone):
 swift test               # XCTest suite
 swift run CelistDBTests  # 200+ logic checks, prints a pass/fail summary
 ```
-</details>
 
-<details open>
-<summary><strong>Windows — Node.js 18+ · Electron 33</strong></summary>
+To regenerate the app icon from the shared master artwork (requires Pillow):
 
 ```bash
-cd windows
-npm install
-npm start          # launch in development
-npm run dist       # build the portable + installer .exe files into dist/
+python3 Scripts/make_icon.py   # 1024px master → /tmp/iconbuild/icon.png
+./Scripts/make_icns.sh         # → Scripts/AppIcon.icns
 ```
-
-To regenerate the Windows icon from the shared master artwork:
-
-```bash
-python3 src/gen_icon.py   # requires Pillow
-```
-</details>
 
 ## 🐍 pandas companion (`tools/pycelist`)
 
-The apps export CSV/JSON. For **styled Excel `.xlsx`** — and as the home for
+The app exports CSV/JSON. For **styled Excel `.xlsx`** — and as the home for
 every pandas-shaped feature on the roadmap — the repo carries a small read-only
 Python CLI.
 
@@ -192,14 +164,13 @@ reference, the importable Python API, and the test suite.
 
 ## Keyboard shortcuts
 
-| Action | macOS | Windows |
-|---|---|---|
-| New database | `⌘N` | `Ctrl+N` |
-| Open database | `⌘O` | `Ctrl+O` |
-| Save | — | `Ctrl+S` |
-| Run query | `⌘↵` | `Ctrl+↵` |
-| Commit cell edit | `Return` / `Tab` | `Enter` / `Tab` |
-| Cancel cell edit | `Esc` | `Esc` |
+| Action | Shortcut |
+|---|---|
+| New database | `⌘N` |
+| Open database | `⌘O` |
+| Run query | `⌘↵` |
+| Commit cell edit | `Return` / `Tab` |
+| Cancel cell edit | `Esc` |
 
 ## Repository layout
 
@@ -212,16 +183,12 @@ celist.db/
 │   ├── Tests/                SwiftPM test target
 │   ├── Scripts/              Icon generation + .app packaging
 │   └── Package.swift
-├── windows/                  Windows app (Electron + sql.js)
-│   ├── src/                  main / preload / renderer + styles
-│   ├── build/                Generated .ico
-│   └── package.json
 ├── tools/pycelist/           pandas companion CLI (styled Excel export)
 │   ├── celistdb/             db.py (read-only SQLite) + excel.py + cli.py
 │   └── tests/                21 unittest cases
 ├── docs/
 │   ├── ARCHITECTURE.md       How the layers fit together
-│   └── assets/               Shared logo artwork
+│   └── assets/               Logo artwork
 ├── ROADMAP.md                MVP → v1 → v2 plan
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
@@ -271,10 +238,7 @@ Released under the [MIT License](LICENSE) © 2026 R Sashank Adithiyaa.
 ## Acknowledgements
 
 - [**GRDB.swift**](https://github.com/groue/GRDB.swift) — the SQLite toolkit
-  powering the macOS edition.
-- [**sql.js**](https://github.com/sql-js/sql.js) — SQLite compiled to
-  WebAssembly, powering the Windows edition.
-- [**Electron**](https://www.electronjs.org) — the Windows desktop shell.
+  powering the app.
 - Inspired by the good parts of MS Access, MySQL Workbench, and phpMyAdmin.
 
 <div align="center">

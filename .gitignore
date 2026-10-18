@@ -10,11 +10,6 @@ macos/.swiftpm/
 macos/dist/
 *.xcodeproj
 
-# Node / Electron
-windows/node_modules/
-windows/dist/
-npm-debug.log*
-
 # Locally created databases
 *.sqlite
 *.sqlite3

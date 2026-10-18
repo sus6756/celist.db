@@ -6,8 +6,8 @@ is "does this make that easier?" — not "is this clever?"
 
 ## Ways to help
 
-- 🐛 **Report bugs** — include your OS, the edition (macOS / Windows), the steps
-  to reproduce, and the database file if it isn't sensitive.
+- 🐛 **Report bugs** — include your macOS version, the steps to reproduce, and
+  the database file if it isn't sensitive.
 - 💡 **Request features** — describe the *task* you were trying to do; that tells
   us more than a proposed API.
 - 📝 **Improve the docs** — typos, unclear steps, and missing screenshots are all
@@ -16,7 +16,7 @@ is "does this make that easier?" — not "is this clever?"
 
 ## Development setup
 
-### macOS edition
+celist.db is a macOS-only product; there is no second edition to keep in sync.
 
 Requires macOS 14+, Xcode command line tools, and Swift 6.0 (or newer).
 
@@ -34,17 +34,6 @@ Regenerating the app icon (requires Pillow):
 ```bash
 python3 Scripts/make_icon.py   # writes the 1024px master
 ./Scripts/make_icns.sh         # master -> Scripts/AppIcon.icns
-```
-
-### Windows edition
-
-Requires Node.js 18+.
-
-```bash
-cd windows
-npm install
-npm start          # launch
-npm run dist       # portable + installer .exe into dist/
 ```
 
 ### pandas companion
@@ -70,9 +59,9 @@ Or install the `celist` console script with `pip install -e tools/pycelist`.
 - **SQL is shown before it runs.** If a feature generates SQL, surface it.
 - Match the surrounding style — the code uses the standard Swift API design
   guidelines and small, focused view models.
-- Hidden gotcha: the Windows edition keeps the database in memory via sql.js, so
-  **every mutation must be persisted back to disk** (see `persist()` in
-  `windows/src/renderer.js`).
+- Hidden gotcha: `SQLiteService` runs on a serial `DispatchQueue`, so every
+  `DatabaseService` call hops off the main thread and back — never assume a
+  result is ready on the same turn of the run loop.
 - In `tools/pycelist`, never open a database for writing — the tool's whole
   safety story is SQLite `mode=ro`, and `tests/test_export.py` enforces it.
   Keep user-facing failures as `CelistDBError` so the CLI prints one clean line
@@ -84,8 +73,6 @@ Or install the `celist` console script with `pip install -e tools/pycelist`.
       touched Swift code; `swift test` too if you have Xcode installed)
 - [ ] `cd tools/pycelist && python3 -m unittest discover -s tests` passes (if
       you touched the pandas companion)
-- [ ] `cd windows && npm start` launches without console errors (if you touched
-      the Electron app)
 - [ ] New user-facing strings are plain language, and any binding that can be
       empty has an empty state
 - [ ] README / docs updated if behavior or commands changed

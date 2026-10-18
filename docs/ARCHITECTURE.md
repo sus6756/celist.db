@@ -1,8 +1,7 @@
 # Architecture
 
-celist.db ships as two native-feeling editions that share one product model and
-one file format. This document explains how each is layered and, more
-importantly, *why*.
+celist.db is a macOS app built on one product model and one file format. This
+document explains how it is layered and, more importantly, *why*.
 
 ---
 
@@ -20,7 +19,7 @@ Two consequences:
    right default for beginners but not the only thing people will ask for. That
    is why the data layer is a protocol, not a concrete class.
 
-## 2. macOS edition — SwiftUI + GRDB
+## 2. The app — SwiftUI + GRDB
 
 ```
  SwiftUI Views              Views/, AccessTheme.swift, RibbonView.swift
@@ -59,28 +58,7 @@ Implement the `DatabaseService` protocol — `listObjects()`, `schema(for:)`,
 `fetchRows(in:state:)`, `updateCell(_:column:rowID:in:)`, `runSQL(_:)`, and so
 on — and hand it to `AppState` instead of `SQLiteService`. No view changes.
 
-## 3. Windows edition — Electron + sql.js
-
-```
- renderer.js   Access-style ribbon UI, datasheet, designer, SQL editor
-      │        (no Node access — contextIsolation + sandbox on)
- preload.js    contextBridge: `celistdb.*` — a small, explicit API surface
-      │        (file dialogs, read/write file, platform info)
- main.js       Electron main process: window lifecycle + IPC handlers
-      │
- sql.js        SQLite compiled to WebAssembly; database persisted as bytes
-               written to the user's chosen .db file
-```
-
-The renderer holds the UI state (`S`) and talks to disk only through the
-`celistdb` bridge. `contextIsolation` is on, `nodeIntegration` is off, and the
-renderer's CSP allows only local scripts plus `wasm-unsafe-eval` for sql.js.
-
-Because sql.js keeps the database in memory, every mutating action writes the
-exported bytes back to the `.db` file — which is what makes the resulting file a
-plain SQLite database that opens anywhere.
-
-## 4. Shared conventions
+## 3. Shared conventions
 
 | Concern | Convention |
 |---|---|
@@ -89,30 +67,28 @@ plain SQLite database that opens anywhere.
 | Blank cells | An empty cell means `NULL`, not an empty string |
 | SQL generation | Always shown to the user before it runs (table designer) |
 | Errors | Surfaced as human-readable messages next to the action |
-| Sample data | "Create Sample Database" produces the same shop schema in both editions |
+| Sample data | "Create Sample Database" produces a ready-made shop schema with rows |
 
-## 5. Where the code lives
+## 4. Where the code lives
 
 | Path | Contents |
 |---|---|
 | `macos/Sources/CelistDBCore` | Engine-agnostic models + `DatabaseService` protocol |
-| `macos/Sources/CelistDB` | macOS app: views, view models, app shell |
+| `macos/Sources/CelistDB` | App: views, view models, app shell |
 | `macos/Scripts` | Icon generation and `.app` packaging |
-| `windows/src` | Electron main, preload, renderer, styles |
-| `windows/src/gen_icon.py` | Windows `.ico` generation from the shared master |
 | `tools/pycelist` | Read-only pandas CLI + importable API for styled Excel export |
-| `docs/assets` | Shared logo artwork |
+| `docs/assets` | Logo artwork |
 
-## 6. The optional pandas companion
+## 5. The optional pandas companion
 
-`tools/pycelist` is deliberately *outside* both apps:
+`tools/pycelist` is deliberately *outside* the app:
 
-- Bundling pandas would add ~60 MB and a whole Python runtime to the macOS and
-  Windows packages, for a feature most users open once a month.
+- Bundling pandas would add ~60 MB and a whole Python runtime to the macOS
+  package, for a feature most users open once a month.
 - A CLI over the same `.db` files works standalone, in scripts, in CI, and in
   notebooks — no app running required.
-- Both apps can shell out to it later (`celist export …`) without changing
-  their architecture; the command only needs `python3` on `PATH`, and if it is
+- The app can shell out to it later (`celist export …`) without changing its
+  architecture; the command only needs `python3` on `PATH`, and if it is
   missing the app simply does not offer the extra commands.
 
 It shares the product's data contract rather than its code: it reads the same

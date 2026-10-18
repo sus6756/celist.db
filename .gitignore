@@ -1,2 +1,27 @@
-# Google App Engine generated folder
-appengine-generated/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Xcode / SwiftPM build artifacts
+macos/.build/
+macos/.swiftpm/
+macos/dist/
+*.xcodeproj
+
+# Node / Electron
+windows/node_modules/
+windows/dist/
+npm-debug.log*
+
+# Locally created databases
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+
+# Editor / tooling
+.vscode/
+.idea/
+*.swp

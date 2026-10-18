@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+*.xcodeproj
+.DS_Store
+*.sqlite
+*.sqlite3
+*.db

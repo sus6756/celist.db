@@ -1,0 +1,56 @@
+{
+  "name": "celistdb-windows",
+  "version": "1.0.0",
+  "description": "celist.db — the database app for the rest of us (Windows edition)",
+  "main": "src/main.js",
+  "author": "R Sashank Adithiyaa",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable",
+    "build:dir": "electron-builder --win dir",
+    "dist": "electron-builder --win",
+    "package:win": "electron-builder --win portable --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "sql.js": "^1.12.0"
+  },
+  "build": {
+    "appId": "com.celist.db.windows",
+    "productName": "celist.db",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/sql.js/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "celist-db-windows-portable-${version}.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "celist-db-windows-setup-${version}.exe",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
